@@ -40,8 +40,9 @@ func ParseSize(s string) (int64, error) {
 		return val, nil
 	}
 
-	// Try each suffix from longest to shortest to avoid partial matches
-	suffixes := []string{"KB", "MB", "GB", "TB", "PB", "EB", "K", "M", "G", "T", "P", "E", "B"}
+		// Try each suffix from longest to shortest to avoid partial matches
+		// Also handle variants like "GiB" (gibibytes) and "GB" (gigabytes)
+	suffixes := []string{"KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "KB", "MB", "GB", "TB", "PB", "EB", "K", "M", "G", "T", "P", "E", "B"}
 
 	for _, suffix := range suffixes {
 		if strings.HasSuffix(sUpper, suffix) {
@@ -51,7 +52,18 @@ func ParseSize(s string) (int64, error) {
 				return 0, fmt.Errorf("invalid number in size string '%s': %w", s, err)
 			}
 
-			multiplier := sizeUnits[suffix]
+			// Map GiB variants to GB units (1 GiB = 2^30 bytes, 1 GB = 10^9 bytes)
+			// For simplicity, treat both as binary units (1024-based)
+			baseSuffix := suffix
+			if strings.HasSuffix(suffix, "iB") {
+				baseSuffix = strings.TrimSuffix(suffix, "iB") + "B"
+			}
+
+			multiplier, ok := sizeUnits[baseSuffix]
+			if !ok {
+				multiplier = sizeUnits[suffix]
+			}
+
 			result := int64(num * float64(multiplier))
 
 			if result < 0 {

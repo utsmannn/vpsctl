@@ -508,24 +508,30 @@ func parseSizeToBytes(s string) (int64, error) {
 		return val, nil
 	}
 
-	// Define multipliers
+	// Define multipliers (including GiB, TiB variants)
 	multipliers := map[string]int64{
-		"B":  1,
-		"KB": 1024,
-		"MB": 1024 * 1024,
-		"GB": 1024 * 1024 * 1024,
-		"TB": 1024 * 1024 * 1024 * 1024,
-		"PB": 1024 * 1024 * 1024 * 1024 * 1024,
+		"B":   1,
+		"KB":  1024,
+		"K":   1024,
+		"MB":  1024 * 1024,
+		"M":   1024 * 1024,
+		"GB":  1024 * 1024 * 1024,
+		"G":   1024 * 1024 * 1024,
+		"GIB": 1024 * 1024 * 1024,
+		"TB":  1024 * 1024 * 1024 * 1024,
+		"T":   1024 * 1024 * 1024 * 1024,
+		"TIB": 1024 * 1024 * 1024 * 1024,
+		"PB":  1024 * 1024 * 1024 * 1024 * 1024,
 	}
 
 	for suffix, mult := range multipliers {
 		if strings.HasSuffix(s, suffix) {
 			numStr := strings.TrimSuffix(s, suffix)
-			num, err := strconv.ParseInt(strings.TrimSpace(numStr), 10, 64)
+			num, err := strconv.ParseFloat(strings.TrimSpace(numStr), 64)
 			if err != nil {
 				return 0, fmt.Errorf("invalid number in size string: %s", s)
 			}
-			return num * mult, nil
+			return int64(num * float64(mult)), nil
 		}
 	}
 
