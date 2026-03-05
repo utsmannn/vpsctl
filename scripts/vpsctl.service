@@ -1,0 +1,30 @@
+[Unit]
+Description=vpsctl API Server
+After=network.target lxd.socket
+Requires=lxd.socket
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/vpsctl serve --port 8080
+Restart=on-failure
+RestartSec=5
+
+# Optional: Enable authentication
+# ExecStart=/usr/local/bin/vpsctl serve --port 8080 --token your-secret-token
+
+# Optional: Listen on Unix socket instead
+# ExecStart=/usr/local/bin/vpsctl serve --socket /var/run/vpsctl.sock
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+
+# Security (optional)
+# NoNewPrivileges=true
+# ProtectSystem=strict
+# ProtectHome=true
+# ReadWritePaths=/var/lib/lxd
+
+[Install]
+WantedBy=multi-user.target
