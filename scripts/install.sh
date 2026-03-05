@@ -4,9 +4,14 @@
 # Install script
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/utsmannn/vpsctl/main/scripts/install.sh | bash
-#   curl -fsSL https://raw.githubusercontent.com/utsmannn/vpsctl/main/scripts/install.sh | bash -s -- -v v1.0.0
-#   curl -fsSL https://raw.githubusercontent.com/utsmannn/vpsctl/main/scripts/install.sh | bash -s -- -b /usr/local/bin
+#   # From cloned repo (recommended for private repo)
+#   git clone git@github.com:utsmannn/vpsctl.git
+#   cd vpsctl
+#   ./scripts/install.sh
+#
+#   # Or with options
+#   ./scripts/install.sh -v v1.0.0
+#   ./scripts/install.sh -b /usr/local/bin
 #
 
 set -e
