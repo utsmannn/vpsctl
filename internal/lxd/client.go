@@ -38,9 +38,9 @@ func NewClient() (*Client, error) {
 			continue
 		}
 
-		// Try to connect using ConnectLXD with remote "unix:/path"
+		// Try to connect using ConnectLXDUnix for unix socket
 		args := &lxd.ConnectionArgs{}
-		instanceServer, err := lxd.ConnectLXD(fmt.Sprintf("unix:%s", expandedPath), args)
+		instanceServer, err := lxd.ConnectLXDUnix(expandedPath, args)
 		if err != nil {
 			lastErr = fmt.Errorf("failed to connect to LXD socket at %s: %w", expandedPath, err)
 			continue
@@ -76,9 +76,9 @@ func NewClientWithPath(socketPath string) (*Client, error) {
 		return nil, fmt.Errorf("LXD socket not found at %s", expandedPath)
 	}
 
-	// Connect to LXD
+	// Connect to LXD via Unix socket
 	args := &lxd.ConnectionArgs{}
-	instanceServer, err := lxd.ConnectLXD(fmt.Sprintf("unix:%s", expandedPath), args)
+	instanceServer, err := lxd.ConnectLXDUnix(expandedPath, args)
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to LXD socket at %s: %w", expandedPath, err)
 	}
